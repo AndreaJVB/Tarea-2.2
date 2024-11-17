@@ -15,7 +15,7 @@ connection.connect((error)=>
     {
         if(error)
             {
-                throw new Error("Error en la conexion de base de datos")
+                throw new Error(error.message)
             }
     })
 

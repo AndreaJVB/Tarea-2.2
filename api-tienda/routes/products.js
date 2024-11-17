@@ -9,8 +9,8 @@ productRouter.get('/:id', ProductsController.getProductById )
 
 productRouter.post('/', ProductsController.crateProduct)
 
-productRouter.put('/:id')
+productRouter.put('/:id', ProductsController.updateProduct)
 
-productRouter.delete('/:id')
+productRouter.delete('/:id', ProductsController.deleteProduct)
 
 export default productRouter

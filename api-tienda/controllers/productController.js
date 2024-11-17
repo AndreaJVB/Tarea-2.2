@@ -99,4 +99,130 @@ export class ProductsController {
                 })
         }   
     }
+
+      /**
+     * Metodo Post para guardar productos
+     */
+
+      static crateProduct(req, resp)
+      {
+          const data = req.body
+  
+          const {success, error} = validateProductSchema(data)
+  
+          if(!success){
+              resp.status(400)
+              .json({
+                  message: JSON.parse(error.message)
+              })
+          }
+  
+          const consult = "INSERT INTO productos (nombre, descripcion, precio, stock, categoria, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?)"
+  
+          try{
+              const {nombre, descripcion, precio, stock, categoria, fecha_creacion} = data
+  
+              connection.query(consult, [nombre, descripcion, precio, stock, categoria, fecha_creacion], (error, results)=>{
+  
+                  if(error){
+                      return resp.status(400)
+                      .json({message: "Error en la creacion de los datos"})
+                  }
+  
+                  return resp.status(201)
+                      .header('Content-Type', 'application/json')
+                      .json(data)
+  
+              })
+          }catch(e){
+              return resp.status(400)
+                  .json({
+                      error: true,
+                      message: "Error en la creacion"
+                  })
+          }   
+      }
+      /**
+       * PUT ACTUALIZAR PRODUCTO
+       */
+      static updateProduct(req, res){
+          const { id } = req.params
+          
+          const data = req.body
+  
+          const {success, error} = validatePartialSchema(data)
+  
+          if(!success){
+              res.status(400)
+                  .JSON.parse(error.message)
+              }
+          
+          try
+          {
+            
+              const keys = Object.keys(data)
+              const valores = Object.values(data)
+  
+              const setConsult = keys.map((key)=>`${key} = ?`).join(", ")
+              
+              const consult =  `UPDATE productos SET ${setConsult} WHERE id = ?`
+  
+              connection.query(consult, [...valores, id], (error, result)=>{
+                  if(error){
+                      return res.status(400)
+                          .json({
+                              message: error.message
+                          })
+                  }
+                  if(result.affectedRows == 0){
+                      return res.json({message: "No se encontro resultado para actualizar"})
+                  }
+                  return res.status(200)
+                      .header("Content-Type", "application/json")
+                      .json({
+                          message: "registro actualizado con EXITO"
+                      })
+              })
+                  
+          }
+          catch(e){
+             return res.status(400)
+                  .json({
+                      error: true,
+                      message: e.message
+                  })
+          }
+      }
+  
+      /**
+       * DELETE 
+       */
+      static deleteProduct(req, res) {
+  
+          const {id} = req.params
+  
+          const consult = "DELETE FROM productos WHERE id = ?"
+  
+          try{
+              connection.query(consult, [id], (error, result)=>{
+  
+                  if(error){
+                      return res.status(400)
+                          .json({
+                              message: "Error al borrar el registro"
+                          })
+                  }
+  
+                  return res.status(200)
+                      .json({message: "Registro borrado con exito"})
+  
+              })
+          }catch(e){
+              return res.status(400)
+                  .json({
+                      error: true,
+                      message: "Error"
+                  })
+          }
+      }
 }

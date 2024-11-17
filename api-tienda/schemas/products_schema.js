@@ -1,5 +1,4 @@
 import {z} from 'zod'
-import { parseDate } from '../otros/parseDate.js'
 
 const ProductSchema = z.object(
     {
@@ -33,16 +32,9 @@ const ProductSchema = z.object(
             message: "Se sobrepaso los caracteres maximo en el campo de categorias"
         }).optional(),
 
-        "fecha_creacion": z.string({
-            invalid_type_error: "La fecha no tiene el formato adecuado"
-          })
-            .refine((value) => {
-              const date = parseDate(value);
-              return date !== null;
-            }, {
-              message: "La fecha debe estar en el formato 'YYYY-MM-DD HH:mm:ss'",
-            })
-            .transform((value) => parseDate(value)).optional()
+        "fecha_creacion": z.string().refine((date) => !isNaN(Date.parse(date)), {
+            message: "Debe ser una fecha válida en formato ISO 8601 ejemplo:2024-11-09T17:27:27.000Z",
+          }),
     }
 ).strict()
 
