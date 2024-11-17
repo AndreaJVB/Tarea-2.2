@@ -1,12 +1,13 @@
 import {Router} from 'express'
+import { ProductsController } from '../controllers/productController.js'
 
 const productRouter = Router()
 
-productRouter.get('/')
+productRouter.get('/', ProductsController.getAllProducts)
 
-productRouter.get('/:id')
+productRouter.get('/:id', ProductsController.getProductById )
 
-productRouter.post('/')
+productRouter.post('/', ProductsController.crateProduct)
 
 productRouter.put('/:id')
 
