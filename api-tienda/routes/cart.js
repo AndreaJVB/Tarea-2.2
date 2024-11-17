@@ -1,11 +1,12 @@
 import {Router} from "express"
+import {CartController} from "../controllers/cartController.js"
 
 const cartRouter = Router()
 
-cartRouter.get('/:userId')
+cartRouter.get('/:userId', CartController.getAllCartByUser)
 
-cartRouter.post('/')
+cartRouter.post('/', CartController.addToCart)
 
-cartRouter.delete('/:id')
+cartRouter.delete('/:id', CartController.removeFromCart)
 
 export default cartRouter

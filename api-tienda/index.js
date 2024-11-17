@@ -1,5 +1,6 @@
 import express, {json} from 'express'
 import productRouter from './routes/products.js'
+import cartRouter from './routes/cart.js'
 
 const app = express()
 app.use(json())
@@ -8,6 +9,7 @@ const PORT = process.env.PORT || 3000
 
 //RUTAS
 app.use('/products', productRouter)
+app.use('/carts', cartRouter)
 
 
 app.listen(PORT, ()=>{
