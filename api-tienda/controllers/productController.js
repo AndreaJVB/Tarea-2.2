@@ -16,16 +16,18 @@ export class ProductsController {
                         .json({message: "Error en la consulta"})
                 }
 
-                return res
+                return res.status(200)
                 .header('Content-Type', 'application/json')
-                .status(200)
                 .json(results)
 
             })
         }catch(e)
         {
             return res.status(400)
-            .json("Error en la obtencion de los datos", e)
+            .json({
+                error: true,
+                message: "Error en obtener los datos"
+            })
         }
     }
     
@@ -41,7 +43,7 @@ export class ProductsController {
                             .json({message: "Error al obtener los datos"})
                 }
                 if(result && result.length == 0 ){
-                    return resp.status(400)
+                    return resp.status(404)
                         .json({message: "No se encontro el producto"})
                 }
 
@@ -52,53 +54,14 @@ export class ProductsController {
             })
         }catch(e){
             return resp.status(400)
-            .json({message: e})
+            .json({
+                error: true,
+                message: "Error en obtener los datos"
+            })
         }
         
     }
 
-    /**
-     * Metodo Post para guardar productos
-     */
-
-    static crateProduct(req, resp)
-    {
-        const data = req.body
-
-        const {success, error} = validateProductSchema(data)
-
-        if(!success){
-            resp.status(400)
-            .json({
-                message: JSON.parse(error.message)
-            })
-        }
-
-        const consult = "INSERT INTO productos (nombre, descripcion, precio, stock, categoria, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?)"
-
-        try{
-            const {nombre, descripcion, precio, stock, categoria, fecha_creacion} = data
-
-            connection.query(consult, [nombre, descripcion, precio, stock, categoria, fecha_creacion], (error, results)=>{
-
-                if(error){
-                    return resp.status(400)
-                    .json({message: "Error en la creacion de los datos"})
-                }
-
-                return resp.status(201)
-                    .header('Content-Type', 'application/json')
-                    .json(data)
-
-            })
-        }catch(e){
-            return resp.status(400)
-                .json({
-                    error: true,
-                    message: "Error en la creacion"
-                })
-        }   
-    }
 
       /**
      * Metodo Post para guardar productos
@@ -142,6 +105,7 @@ export class ProductsController {
                   })
           }   
       }
+
       /**
        * PUT ACTUALIZAR PRODUCTO
        */
@@ -175,7 +139,8 @@ export class ProductsController {
                           })
                   }
                   if(result.affectedRows == 0){
-                      return res.json({message: "No se encontro resultado para actualizar"})
+                      return res.status(404)
+                      .json({message: "No se encontro resultado para actualizar"})
                   }
                   return res.status(200)
                       .header("Content-Type", "application/json")
@@ -211,6 +176,11 @@ export class ProductsController {
                           .json({
                               message: "Error al borrar el registro"
                           })
+                  }
+
+                  if(result.affectedRows ===0){
+                    return res.status(404)
+                        .json({message: "no se encontro el producto"})
                   }
   
                   return res.status(200)

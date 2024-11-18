@@ -32,7 +32,7 @@ const ProductSchema = z.object(
             message: "Se sobrepaso los caracteres maximo en el campo de categorias"
         }).optional(),
 
-        "fecha_creacion": z.string().refine((date) => !isNaN(Date.parse(date)), {
+        "fecha_creacion": z.string().datetime().refine((date) => !isNaN(Date.parse(date)), {
             message: "Debe ser una fecha válida en formato ISO 8601 ejemplo:2024-11-09T17:27:27.000Z",
           }),
     }

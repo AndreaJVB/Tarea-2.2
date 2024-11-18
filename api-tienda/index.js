@@ -11,6 +11,12 @@ const PORT = process.env.PORT || 3000
 app.use('/products', productRouter)
 app.use('/carts', cartRouter)
 
+app.use((req, res)=>{
+    res.status(400)
+        .json({
+            message: "Ruta no valida"
+        })
+})
 
 app.listen(PORT, ()=>{
     console.log("escuchando en el puerto")

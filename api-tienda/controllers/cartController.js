@@ -23,7 +23,7 @@ export class CartController{
                 }
 
                 if(results && results.length == 0){
-                    return resp.status(400)
+                    return resp.status(404)
                         .json({
                             message: "No se encontro coincidencia"
                         })
@@ -113,7 +113,7 @@ export class CartController{
                 }
 
                 if(result.affectedRows ===0){
-                    return resp.status(400)
+                    return resp.status(404)
                         .json({
                             message: "No se encontro el producto a eliminar"
                         })
